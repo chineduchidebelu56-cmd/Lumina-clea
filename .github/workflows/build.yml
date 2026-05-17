@@ -5,6 +5,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
+      # This magical line automatically finds your package.json and moves it to the right place
+      - name: Fix Phone Folder Structure
+        run: |
+          TARGET_DIR=$(find . -name "package.json" -exec dirname {} \;)
+          echo "Found files in $TARGET_DIR"
+          if [ "$TARGET_DIR" != "." ]; then
+            cp -r $TARGET_DIR/* .
+          fi
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -18,3 +28,4 @@ jobs:
         with:
           name: lumina-dist
           path: build/
+          
